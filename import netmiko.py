@@ -1,6 +1,6 @@
 from netmiko import ConnectHandler
 from netmiko.ssh_exception import SSHException
-from paramiko import SSHClient, AutoAddPolicy
+import paramiko
 import time
 import getpass
 
@@ -17,19 +17,16 @@ device_info = {
 # Define the maximum number of connection retries
 max_retries = 3
 
-# Custom SSH client that auto-accepts keys
-class MySSHClient(SSHClient):
-    def load_system_host_keys(self):
-        pass
-
-    def missing_host_key(self, hostname, key):
-        self._policy = AutoAddPolicy()
-        return 'a'
+# Custom Paramiko SSH client that auto-accepts keys
+class MySSHClient(paramiko.SSHClient):
+    def missing_host_key(self, client, hostname, key):
+        return
 
 for retry in range(max_retries):
     try:
-        # Create a Netmiko SSH session using the custom SSH client
-        ssh_session = ConnectHandler(**device_info, ssh_strict=False, session_cls=MySSHClient)
+        # Create a Netmiko SSH session using the custom Paramiko SSH client
+        paramiko.client = MySSHClient
+        ssh_session = ConnectHandler(**device_info, ssh_strict=False)
         ssh_session.enable()
 
         # Introduce a delay for stability
