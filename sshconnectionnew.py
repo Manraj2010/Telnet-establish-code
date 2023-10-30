@@ -3,9 +3,10 @@ import time
 import getpass
 
 # Define the device information
+# Although VS Code shows error in this section, this is correct using a variable for ip address
 device_info = {
     'device_type': 'cisco_ios',
-    'ip': '192.168.56.101',
+    'ip': 192.168.56.101, # using variable to fix first connection
     'username': getpass.getpass('Enter Username: '),  # The Username is "prne"
     'password': getpass.getpass('Enter Password: '),  # The Password is "cisco123!"
     'secret': getpass.getpass('Enter Enable Password: '),  # Enable password- "Class123!"
